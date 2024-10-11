@@ -1,39 +1,54 @@
-interface Shape {
-    area(): number;
-    perimeter() : number;
+// OCP - Open Closed Principle stand by two disciplines 
+// 1) Open to extension
+// 2) Closed to modification
+
+// this approach of giving discounts based on customerType is inefficent 
+// as if we feel like adding a new GOLD cutomerType we have to modify already existing code 
+// and hence it is not closed to modification and also diffcult for extension because changing existing code
+// by adding another if check for GOLD might affect already test code (possibly)
+// class Discount {
+//     getDiscount(customerType : 'premium' | 'regular'): number{
+//         if(customerType === 'regular'){
+//           return 10;
+//         }
+//         else if(customerType === 'premium'){
+//             return 20;
+//         }
+//         else return 10;
+//     }
+// }
+
+// APPROACH which followes OCP
+interface Customer {
+    giveDiscount():number;
+}
+class RegularCustomer implements Customer {
+    giveDiscount():number {
+        return 10;
+    }
 }
 
-class Circle implements Shape {
-    constructor(private radius:number){}
-    area(): number{
-        return Math.PI* this.radius * this.radius
+class PremiumCustomer implements Customer{
+    giveDiscount():number {
+     return 20;    
     }
-    perimeter(): number {
-        return 2*Math.PI*this.radius;
-        
+
+}
+
+class Discount {
+    
+    giveDiscount(customer: Customer){
+        return customer.giveDiscount()
     }
 }
 
-class Rectangle implements Shape {
-    constructor(private width:number, private height:number){}
-    area():number{
-        return this.width * this.height
-    }
-    perimeter(): number {
-        return 2* (this.width + this.height)
+// now incase i want to add GOLD cutomerType
+class GoldCustomer implements Customer{
+    giveDiscount(): number {
+        return 30;
     }
 }
 
-// here i will implement abstraction
-function calculateArea(shape: Shape):number {
-   return shape.area()
-}
-
-let circle = new Circle(3);
-let rectangle = new Rectangle(4,6);
-
-console.log(calculateArea(circle));
-console.log(calculateArea(rectangle));
-
-
-
+let premiumCustomer : PremiumCustomer = new PremiumCustomer();
+let discount: Discount = new Discount();
+console.log(discount.giveDiscount(premiumCustomer))
