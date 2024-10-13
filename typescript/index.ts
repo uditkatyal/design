@@ -1,76 +1,47 @@
-// LSP principle states if S is subtype of T, then objects of type T can be replaced with objects of type S
-// without altering any desirable properties of that program
+// a simple example of printer with 3 main functionalities 
+// print() , scan() , fax() 
+// so if we have a simple printer which can only print() we must not use an interface that has having all these methods above
+// this is what ISP - interface segregation principle states
 
+// real world implementation of ISP -> like in roles and permission of user
 
-abstract class Shape {
-    abstract calculateArea() :number;
+// creating post
+// commenting post 
+// sharing post
+
+// admin - 3
+// regular - 2
+
+// this is ISP -> Interface Segregation Principle
+
+interface PostCreation {
+    createPost() : void;
+}
+interface PostCommentting {
+    commentPost() : void;
 }
 
-class Rectangle extends Shape {
-    constructor(public width:number , public height : number){
-        super();
+interface PostSharing {
+    sharePost() : void;
+}
+
+class AdminUser implements PostCreation, PostCommentting, PostSharing {
+    createPost(): void {
+        
     }
-    calculateArea(): number {
-        return this.width * this.height;
+    commentPost(): void {
+        
     }
-}
-
-class Square extends Shape {
-    constructor(public side : number){
-        super()
-    }
-    calculateArea(): number {
-        return this.side * this.side;
-    }
-}
-
-function area(shape : Shape){
-    return shape.calculateArea();
-}
-
-let rectangle : Rectangle = new Rectangle(10,12);
-let square : Square = new Square(8);
-
-console.log(area(rectangle))
-console.log(area(square))
-
-// real world implementation of LSP
-// paymentProcessor
-// credit card
-// debit card
-// paypal payment
-
-abstract class PaymentProcessor {
-    abstract processPayment(amount: number):void;
-}
-
-class CreditCardProcessor extends PaymentProcessor {
-    processPayment(amount: number): void {
-        console.log(`Credit Card payment`)
+    sharePost(): void {
+        
     }
 }
 
-class DebitCardProcessor extends PaymentProcessor{
-    processPayment(amount: number): void {
-        console.log(`Debit Card payment`)
+class RegularUser implements PostCreation, PostCommentting {
+    createPost(): void {
+        
+    }
+    commentPost(): void {
+        
     }
 }
-
-class PaypalProcessor extends PaymentProcessor {
-    processPayment(amount: number): void {
-        console.log('Paypal payment')
-    }
-}
-
-// client code
-function executePayment(paymentProcessor: PaymentProcessor, amount: number){
-    paymentProcessor.processPayment(amount);
-}
-
-let Creditcard = new CreditCardProcessor();
-let Debitcard = new DebitCardProcessor();
-
-console.log(executePayment(Creditcard, 10));
-
-
-
