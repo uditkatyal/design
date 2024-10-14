@@ -1,47 +1,55 @@
-// a simple example of printer with 3 main functionalities 
-// print() , scan() , fax() 
-// so if we have a simple printer which can only print() we must not use an interface that has having all these methods above
-// this is what ISP - interface segregation principle states
+// DIP  - according to DIP -> high level modules should not depend  on low level modules. Both should depend on abstraction. 
+// Abstractions should not depend on details but details should depend on abstractions
 
-// real world implementation of ISP -> like in roles and permission of user
 
-// creating post
-// commenting post 
-// sharing post
 
-// admin - 3
-// regular - 2
+// in this example high level class is dependent on low level class
+// class MySqlDatabase {
+//     save(data: string):void {
+//     }
+// }
 
-// this is ISP -> Interface Segregation Principle
+// class HighLevelModule {
 
-interface PostCreation {
-    createPost() : void;
+//     constructor(public database : MySqlDatabase){
+//     }
+//     execute(data:string):void{
+//       this.database.save(data);
+//     }
+// }
+
+// instead use DIP
+
+interface IDatabase {
+    save(data:string):void;
 }
-interface PostCommentting {
-    commentPost() : void;
-}
 
-interface PostSharing {
-    sharePost() : void;
-}
-
-class AdminUser implements PostCreation, PostCommentting, PostSharing {
-    createPost(): void {
-        
-    }
-    commentPost(): void {
-        
-    }
-    sharePost(): void {
-        
+class MySqlDatabase implements IDatabase {
+    save(data: string): void {
+        console.log(`${data} got saved to MySql Database`)
     }
 }
 
-class RegularUser implements PostCreation, PostCommentting {
-    createPost(): void {
-        
-    }
-    commentPost(): void {
-        
+class MongoDatabase implements IDatabase {
+    save(data: string) : void {
+        console.log(`${data} got saved to MongoDatabase`)
     }
 }
+
+class HighLevelModule {
+    constructor(public database : IDatabase){
+    }
+    execute(data: string):void {
+     this.database.save(data);
+    }
+}
+
+let MySql: MySqlDatabase = new MySqlDatabase();
+let MongoDb :MongoDatabase = new MongoDatabase()
+
+let highLevel : HighLevelModule = new HighLevelModule(MySql)
+let highLevel2 : HighLevelModule = new HighLevelModule(MongoDb);
+
+highLevel.execute("Udit Katyal")
+highLevel2.execute("some data")
+
